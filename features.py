@@ -55,6 +55,18 @@ def get_num_non_ascii(url):
 
 X['non_ascii'] = df['url'].apply(get_num_non_ascii)
 
+# 5) URL length
+def get_url_length(url):
+    return len(url)
+
+X['url_length'] = df['url'].apply(get_url_length)
+
+# 6) IP address presence
+def has_ip_address(url):
+    ip_address_re = r"(?:\d{1,3}\.){3}\d{1,3}"
+    return bool(re.match(ip_address_re, url))
+
+X['has_ip'] = df['url'].apply(has_ip_address)
 
 # Maybe do evaluation on features? Eg chi2 test, select k best 
 
