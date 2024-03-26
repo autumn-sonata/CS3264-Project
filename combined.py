@@ -1,3 +1,5 @@
+# COMBINES FEATURES AND MODEL FOR FASTER RUNNING
+
 import pandas as pd
 import re
 import whois
@@ -8,6 +10,11 @@ import tldextract
 from scipy.sparse import hstack, csr_matrix
 from sklearn.feature_extraction.text import CountVectorizer
 import numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn import svm
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, f1_score
 
 df = pd.read_csv("datasets/malicious_phish.csv")
 
@@ -120,6 +127,25 @@ X = hstack([csr_http, csr_https, csr_www, csr_non_ascii, csr_url_len, csr_has_ip
 
 # Maybe do evaluation on features? Eg chi2 test, select k best, PCA 
 
-# Store dataframe into CSV file for modelling
-np.savetxt('datasets/feature_updated_dataset_X.csv', X.toarray(), delimiter=',')
-np.savetxt('datasets/feature_updated_dataset_y.csv', y.toarray(), delimiter=',')
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+y_train, y_test = y_train.values.ravel(), y_test.values.ravel()
+
+# Modelling
+# 1) Logistic Regression
+model_lr = LogisticRegression()
+
+# 2) SVM
+model_svm = svm.SVC()
+
+# 3) Random Forest Classifier
+model_rfc = RandomForestClassifier()
+
+models = [model_lr, model_svm, model_rfc]
+for model in models:
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+
+    # Verifying model fit
+    accuracy = accuracy_score(y_test, y_pred)
+    f1_score = f1_score(y_test, y_pred, average='weighted')
+    print(f"Accuracy: {accuracy} | F1 score: {f1_score} | {model.__class__.__name__}")

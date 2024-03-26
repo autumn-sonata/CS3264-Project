@@ -22,10 +22,9 @@ Only trusted sources such as DNS Authoritative, TLD, root servers are considered
 5) Length of URL -> longer URL = more likely to be malware
 6) Has IP address in URL -> Bypassing DNS address checks, common in malware
 7) Domain age -> Registered later, likely to be malware (older domains likely have been caught?), use WHOIS database maintained by ICANN
-8) Check TLD domain
-9) Check authoritative domain
-10) Typosquatting detection via Levenshtein distance on common words from the internet (common authoritative domains from Alexa top 1 million domains)
+8) Typosquatting detection via Levenshtein distance on common words from the internet (common authoritative domains from Alexa top 1 million domains)
 - Check for some library for this
+9) Check google search rank when url is searched
 
 ### Model training
 
