@@ -31,3 +31,7 @@ Only trusted sources such as DNS Authoritative, TLD, root servers are considered
 1) Logistic Regression
 2) SVM classifier
 3) Random Forest classifier
+
+### BERT Model 
+Download Link: https://drive.google.com/file/d/1yxJGLWCx5lPktDJE9q2VYYwHJW-s6eHH/view?usp=drive_link
+Trained using: dataset/Sampled_Data_BERT.csv
