@@ -158,7 +158,7 @@ def domain_subdomain_suffix_encoding(df):
     return domain, subdomain, suffix
 
 csr_domain, csr_subdomain, csr_suffix = domain_subdomain_suffix_encoding(df['url'])
-X = hstack([csr_http, csr_https, csr_www, csr_non_ascii, csr_url_len, csr_has_ip, csr_domain, csr_subdomain, csr_suffix])
+X = hstack([csr_http, csr_https, csr_www, csr_url_len, csr_domain, csr_subdomain, csr_suffix])
 
 # Maybe do evaluation on features? Eg chi2 test, select k best, PCA 
 
