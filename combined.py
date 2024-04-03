@@ -15,6 +15,8 @@ from sklearn import svm
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, f1_score
+import matplotlib.pyplot as plt 
+import sys
 
 df = pd.read_csv("datasets/malicious_phish.csv")
 
@@ -35,9 +37,9 @@ def classification_type(type):
     elif type == "malware":
         return 3
     else:
-        print(f"Unable to find proper type: {type}")
+        print(f"Unable to find proper type: {type}", file=sys.stderr)
 
-y = df['type'].apply(classification_type)
+y = df['type'].apply(classification_type).values
 
 # Feature engineering
 
@@ -45,7 +47,27 @@ y = df['type'].apply(classification_type)
 def get_http(url):
     return len(re.findall(r"http://", url))
 
-csr_http = csr_matrix(df['url'].apply(get_http).values).T
+http_counts = df['url'].apply(get_http).values
+csr_http = csr_matrix(http_counts).T
+
+## Analysis of HTTP count
+def count_analysis(X, y):
+    unique_y = np.unique(y)
+    fig, axs = plt.subplots(len(unique_y), 1, figsize=(8, len(unique_y) * 4))
+    for i in unique_y:
+        indices = np.where(y == i)[0]
+        counts_i = http_counts[indices]
+        unique_vals, counts = np.unique(counts_i, return_counts=True)
+        axs[i].bar(unique_vals, counts, width=0.5)
+        axs[i].set_xticks(np.arange(min(unique_vals), max(unique_vals)+1, 1))
+        axs[i].set_xlabel('Number of HTTP in URL: ' + str(i))
+        axs[i].set_ylabel('Number of training examples: ' + str(i))
+        axs[i].set_title('Number of training examples by number of HTTP in URL: ' + str(i))
+
+    plt.tight_layout()
+    plt.show()
+
+count_analysis(http_counts, y)
 
 # 2) HTTPS count
 def get_https(url):
