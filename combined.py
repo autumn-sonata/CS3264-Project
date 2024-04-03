@@ -50,11 +50,12 @@ def count_analysis(X, y, feature_name):
         counts_i = X[indices]
         unique_vals, counts = np.unique(counts_i, return_counts=True)
         axs[i].bar(unique_vals, counts, width=0.5)
-        axs[i].set_xticks(np.arange(min(unique_vals), max(unique_vals)+1, 1))
+        # axs[i].set_xticks(np.arange(min(unique_vals), max(unique_vals)+1, 1))
         axs[i].set_xlabel(f"Number of {feature_name} in URL: {i}")
         axs[i].set_ylabel(f"Number of training examples: {i}")
         axs[i].set_title(f"Number of training examples by number of {feature_name} in URL: {i}")
 
+    plt.subplots_adjust(left=0.1, right=0.9, bottom=0.1, top=0.9, wspace=0.2, hspace=0.2)
     plt.tight_layout()
     plt.savefig(f"plots/{feature_name}_distribution.png")
 
@@ -156,6 +157,22 @@ def domain_subdomain_suffix_encoding(df):
     suffix = suffix_vec.fit_transform(suffix)
 
     return domain, subdomain, suffix
+
+# 11) Number of digits
+def get_num_digits(url):
+    return len(re.findall(r'\d', url))
+
+digit_count = df['url'].apply(get_num_digits)
+csr_digit_count = csr_matrix(digit_count).T
+count_analysis(digit_count, y, "digit")
+
+# 12) Number of %
+def get_num_percent(url):
+    return len(re.findall(r'%', url))
+
+percentage_count = df['url'].apply(get_num_percent)
+csr_percentage_count = csr_matrix(percentage_count).T
+count_analysis(percentage_count, y, "%")
 
 csr_domain, csr_subdomain, csr_suffix = domain_subdomain_suffix_encoding(df['url'])
 X = hstack([csr_http, csr_https, csr_www, csr_url_len, csr_domain, csr_subdomain, csr_suffix])
