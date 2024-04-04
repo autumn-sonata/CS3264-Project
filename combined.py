@@ -15,6 +15,8 @@ from sklearn import svm
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, f1_score
+import matplotlib.pyplot as plt 
+import sys
 
 df = pd.read_csv("datasets/malicious_phish.csv")
 
@@ -35,9 +37,27 @@ def classification_type(type):
     elif type == "malware":
         return 3
     else:
-        print(f"Unable to find proper type: {type}")
+        print(f"Unable to find proper type: {type}", file=sys.stderr)
 
-y = df['type'].apply(classification_type)
+y = df['type'].apply(classification_type).values
+
+## Analysis of counts
+def count_analysis(X, y, feature_name):
+    unique_y = np.unique(y)
+    fig, axs = plt.subplots(len(unique_y), 1, figsize=(8, len(unique_y) * 4))
+    for i in unique_y:
+        indices = np.where(y == i)[0]
+        counts_i = X[indices]
+        unique_vals, counts = np.unique(counts_i, return_counts=True)
+        axs[i].bar(unique_vals, counts, width=0.5)
+        # axs[i].set_xticks(np.arange(min(unique_vals), max(unique_vals)+1, 1))
+        axs[i].set_xlabel(f"Number of {feature_name} in URL: {i}")
+        axs[i].set_ylabel(f"Number of training examples: {i}")
+        axs[i].set_title(f"Number of training examples by number of {feature_name} in URL: {i}")
+
+    plt.subplots_adjust(left=0.1, right=0.9, bottom=0.1, top=0.9, wspace=0.2, hspace=0.2)
+    plt.tight_layout()
+    plt.savefig(f"plots/{feature_name}_distribution.png")
 
 # Feature engineering
 
@@ -45,42 +65,58 @@ y = df['type'].apply(classification_type)
 def get_http(url):
     return len(re.findall(r"http://", url))
 
-csr_http = csr_matrix(df['url'].apply(get_http).values).T
+## Analysis of HTTP count
+http_counts = df['url'].apply(get_http).values
+csr_http = csr_matrix(http_counts).T
+count_analysis(http_counts, y, "HTTP")
+
 
 # 2) HTTPS count
 def get_https(url):
     return len(re.findall(r"https://", url))
 
-csr_https = csr_matrix(df['url'].apply(get_https).values).T
+## Analysis of HTTPS count
+https_counts = df['url'].apply(get_https).values
+csr_https = csr_matrix(https_counts).T
+count_analysis(https_counts, y, "HTTPS")
 
 # 3) www count
 def get_www(url):
     return len(re.findall(r"www", url))
 
-csr_www = csr_matrix(df['url'].apply(get_www).values).T
+## Analysis of www count
+www_counts = df['url'].apply(get_www).values
+csr_www = csr_matrix(www_counts).T
+count_analysis(www_counts, y, "www")
 
-# 4) Non-ASCII counter
-def get_num_non_ascii(url):
-    count = 0
-    for ch in url:
-        if ord(ch) > 127:
-            count += 1
-    return count
+# 4) Non-ASCII counter NOT USEFUL
+# def get_num_non_ascii(url):
+#     count = 0
+#     for ch in url:
+#         if ord(ch) > 127:
+#             count += 1
+#     return count
 
-csr_non_ascii = csr_matrix(df['url'].apply(get_num_non_ascii).values).T
+# non_ascii_counts = df['url'].apply(get_num_non_ascii).values
+# csr_non_ascii = csr_matrix(non_ascii_counts).T
+# count_analysis(non_ascii_counts, y, "non_ascii")
 
 # 5) URL length
 def get_url_length(url):
     return len(url)
 
-csr_url_len = csr_matrix(df['url'].apply(get_url_length)).T
+url_length_count = df['url'].apply(get_url_length)
+csr_url_len = csr_matrix(url_length_count).T
+count_analysis(url_length_count, y, "url_length")
 
-# 6) IP address presence
-def has_ip_address(url):
-    ip_address_re = r"(?:\d{1,3}\.){3}\d{1,3}"
-    return bool(re.match(ip_address_re, url))
+# 6) IP address presence: NOT USEFUL
+# def has_ip_address(url):
+#     ip_address_re = r"(?:\d{1,3}\.){3}\d{1,3}"
+#     return bool(re.match(ip_address_re, url))
 
-csr_has_ip = csr_matrix(df['url'].apply(has_ip_address).values).T
+# ip_addr_presence = df['url'].apply(has_ip_address).values
+# csr_has_ip = csr_matrix(ip_addr_presence).T
+# count_analysis(ip_addr_presence, y, "ip address")
 
 # 7) Google search ranking
 # def get_google_search_rank(url):
@@ -122,8 +158,24 @@ def domain_subdomain_suffix_encoding(df):
 
     return domain, subdomain, suffix
 
+# 11) Number of digits
+def get_num_digits(url):
+    return len(re.findall(r'\d', url))
+
+digit_count = df['url'].apply(get_num_digits)
+csr_digit_count = csr_matrix(digit_count).T
+count_analysis(digit_count, y, "digit")
+
+# 12) Number of %
+def get_num_percent(url):
+    return len(re.findall(r'%', url))
+
+percentage_count = df['url'].apply(get_num_percent)
+csr_percentage_count = csr_matrix(percentage_count).T
+count_analysis(percentage_count, y, "%")
+
 csr_domain, csr_subdomain, csr_suffix = domain_subdomain_suffix_encoding(df['url'])
-X = hstack([csr_http, csr_https, csr_www, csr_non_ascii, csr_url_len, csr_has_ip, csr_domain, csr_subdomain, csr_suffix])
+X = hstack([csr_http, csr_https, csr_www, csr_url_len, csr_domain, csr_subdomain, csr_suffix])
 
 # Maybe do evaluation on features? Eg chi2 test, select k best, PCA 
 
