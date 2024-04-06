@@ -21,7 +21,7 @@ model_svm = svm.SVC()
 # 3) Random Forest Classifier
 model_rfc = RandomForestClassifier()
 
-models = [model_lr, model_rfc, model_svm]
+models = [model_lr, model_rfc]
 for model in models:
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)

@@ -1,21 +1,21 @@
 from transformers import DistilBertTokenizer, DistilBertForSequenceClassification, AutoTokenizer, AutoModelForSequenceClassification
 import torch
 import torch.nn.functional as F
+import tldextract
 
 # Load tokenizer
 tokenizer = AutoTokenizer.from_pretrained('distilbert-base-uncased')
 
 # Load model
-model_path = 'bert_model_url_classification\distilBERT Model 3 Epochs 100k Samples'
+model_path = 'bert_model_url_classification\distilBERT Model 3 Epochs RandomUnderSampled & Additional Features'
 model = AutoModelForSequenceClassification.from_pretrained(model_path)
 
 model.eval()
 
 def classify_text(text):
     inputs = tokenizer(text, return_tensors='pt', padding=True, truncation=True)
-    
     with torch.no_grad():
-        outputs = model(  inputs)
+        outputs = model(**inputs)
         logits = outputs.logits
     
     probabilities = F.softmax(logits, dim=1)
@@ -24,9 +24,18 @@ def classify_text(text):
     
     return predicted_class, confidence_score
 
+def split_text(text):
+  extracted = tldextract.extract(text)
+  domain = extracted.domain.lower()
+  subdomain = extracted.subdomain.lower() if extracted.subdomain else 'na'
+  suffix = extracted.suffix.lower()
+  return domain + " " + subdomain + " " + suffix
+  
+  
 label_map = ["benign", "defacement", "phishing", "malware"]
 
 while(True):
   input_text = input("Enter a URL to classify: ")
-  predicted_class, confidence = classify_text(input_text)
+  input_val = input_text + " " + split_text(input_text) 
+  predicted_class, confidence = classify_text(input_val)
   print("Predicted class:", label_map[predicted_class], ", Confidence:", f"{confidence:.2f}")
