@@ -35,3 +35,10 @@ Only trusted sources such as DNS Authoritative, TLD, root servers are considered
 ### BERT Model 
 Download Link: https://drive.google.com/file/d/1yxJGLWCx5lPktDJE9q2VYYwHJW-s6eHH/view?usp=drive_link
 Trained using: dataset/Sampled_Data_BERT.csv
+
+### Additional Datasets
+#### Training and validation set
+https://www.kaggle.com/datasets/sid321axn/malicious-urls-dataset
+
+#### Test set
+- Phishing test: https://github.com/GregaVrbancic/Phishing-Dataset/blob/master/dataset_full.csv 

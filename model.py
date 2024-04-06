@@ -10,8 +10,8 @@ import numpy as np
 X = pd.read_csv("datasets/feature_updated_dataset_X.csv")
 y = pd.read_csv("datasets/feature_updated_dataset_y.csv")
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=69)
-y_train, y_test = y_train.values.ravel(), y_test.values.ravel()
+X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=69)
+y_train, y_val = y_train.values.ravel(), y_val.values.ravel()
 
 # Modelling
 # 1) Logistic Regression
@@ -42,7 +42,7 @@ for model in models:
             select_feature_model = SelectKBest(f_regression, k=i)
             X_train_partition = select_feature_model.fit_transform(X_train, y_train)
             model.fit(X_train_partition, y_train)
-            X_test_partition = select_feature_model.transform(X_test)
+            X_test_partition = select_feature_model.transform(X_val)
             y_pred = model.predict(X_test_partition)
 
             feature_importances = model.feature_importances_
@@ -54,6 +54,6 @@ for model in models:
             feature_set = curr_feature_set
 
             # Verifying model fit
-            accuracy = accuracy_score(y_test, y_pred)
-            f1 = f1_score(y_test, y_pred, average='weighted')
+            accuracy = accuracy_score(y_val, y_pred)
+            f1 = f1_score(y_val, y_pred, average='weighted')
             print(f"Accuracy: {accuracy} | F1 score: {f1} | {model.__class__.__name__} | Number of features: {i} | Added: {new_feature} | Features: {curr_feature_set}")
