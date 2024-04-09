@@ -16,6 +16,14 @@ model = RandomForestClassifier(n_estimators=100, max_depth=20, min_samples_split
 model.fit(X_train, y_train)
 y_pred = model.predict(X_val)
 
+# Prints confidence for each entry in X_val
+# y_pred = model.predict_proba(X_val)
+# for prediction in y_pred:
+#     print(f'Classification: {max(range(len(prediction)), key=prediction.__getitem__)}')
+#     for i in range(4):
+#         print(f'Class {i} confidence: {(prediction[i] * 100):.4f}%')
+#     print('\n')
+
 # Evaluation
 accuracy = accuracy_score(y_val, y_pred)
 precision, recall, f1, support = precision_recall_fscore_support(y_val, y_pred, average='weighted')
