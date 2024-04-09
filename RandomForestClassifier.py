@@ -22,6 +22,6 @@ precision, recall, f1, support = precision_recall_fscore_support(y_val, y_pred, 
 print(f"Accuracy: {accuracy} | Precision: {precision} | Recall: {recall} | f1 score: {f1} | {model.__class__.__name__}")
 
 # Per-class metrics
-precision, recall, f1, support = precision_recall_fscore_support(y_val, y_pred, average='weighted')
+precision, recall, f1, support = precision_recall_fscore_support(y_val, y_pred)
 for i in range(4):
     print(f"Class {i}:\nAccuracy: {accuracy[i]} | Precision: {precision[i]} | Recall: {recall[i]} | f1 score: {f1[i]} | {model.__class__.__name__}")
