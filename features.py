@@ -1,11 +1,11 @@
 import math
 import pandas as pd
 import re
-import whois
+# import whois
 from datetime import datetime
 import time
-from googlesearch import search
-import tldextract
+# from googlesearch import search
+# import tldextract
 from scipy.sparse import hstack, csr_matrix
 from sklearn.feature_extraction.text import CountVectorizer
 import numpy as np

@@ -4,7 +4,7 @@ from sklearn import svm
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, f1_score
-from sklearn.feature_selection import SelectKBest, f_regression, mutual_info_classif
+from sklearn.feature_selection import SelectKBest, f_classif 
 import numpy as np
 
 X = pd.read_csv("datasets/feature_updated_dataset_X.csv")
@@ -23,7 +23,7 @@ model_svm = svm.SVC()
 # 3) Random Forest Classifier
 model_rfc = RandomForestClassifier()
 
-models = [model_lr, model_rfc]
+models = [model_rfc]
 for model in models:
     # model.fit(X_train, y_train)
     # y_pred = model.predict(X_test)
@@ -39,7 +39,8 @@ for model in models:
       "csr_url_entropy", "csr_url_num_params", "csr_url_num_subdomains", "csr_domain_extension"]
         feature_set = set()
         for i in range(1, X_train.shape[1] + 1):
-            select_feature_model = SelectKBest(f_regression, k=i)
+            model = RandomForestClassifier()
+            select_feature_model = SelectKBest(f_classif, k=i)
             X_train_partition = select_feature_model.fit_transform(X_train, y_train)
             model.fit(X_train_partition, y_train)
             X_test_partition = select_feature_model.transform(X_val)
