@@ -296,7 +296,7 @@ def pd_get_num_count(url):
 pd_num_count = df['url'].apply(pd_get_num_count)
 csr_pd_num_count = csr_matrix(pd_num_count).T
 
-# 25) Primary Domain: Number of non-alphanumeric characters
+# 26) Primary Domain: Number of non-alphanumeric characters
 def pd_get_num_non_alphanumeric(url):
   extracted = tldextract.extract(url)
   primary_domain = extracted.domain + '.' + extracted.suffix
@@ -304,7 +304,7 @@ def pd_get_num_non_alphanumeric(url):
 pd_non_alphanumeric_count = df['url'].apply(pd_get_num_non_alphanumeric)
 csr_pd_non_alphanumeric_count = csr_matrix(pd_non_alphanumeric_count).T
 
-# 26) Primary Domain: Number of @
+# 27) Primary Domain: Number of @
 def pd_get_num_at(url):
   extracted = tldextract.extract(url)
   primary_domain = extracted.domain + '.' + extracted.suffix
@@ -312,7 +312,7 @@ def pd_get_num_at(url):
 pd_at_count = df['url'].apply(pd_get_num_at)
 csr_pd_at_count = csr_matrix(pd_at_count).T
 
-# 26) Primary Domain: Number of hyphens
+# 28) Primary Domain: Number of hyphens
 def pd_get_hyphen_count(url):
   extracted = tldextract.extract(url)
   primary_domain = extracted.domain + '.' + extracted.suffix
@@ -320,7 +320,7 @@ def pd_get_hyphen_count(url):
 pd_hyphen_count = df['url'].apply(pd_get_hyphen_count)
 csr_pd_hyphen_count = csr_matrix(pd_hyphen_count).T
 
-# 26) Primary Domain: In top alexa 1m
+# 29) Primary Domain: In top alexa 1m
 def pd_get_in_alexa_top_1m(url):
   extracted = tldextract.extract(url)
   primary_domain = extracted.domain + '.' + extracted.suffix
@@ -329,48 +329,48 @@ pd_in_alex_top_1m = df['url'].apply(pd_get_in_alexa_top_1m)
 csr_pd_in_alex_top_1m = csr_matrix(pd_in_alex_top_1m).T
 
 # ===== Path Features ===== #
-# 27) Number of //
+# 30) Number of //
 def get_path_num_double_slash(url):
   path = urlparse(url).path
   return len(re.findall(r'//', path))
 path_double_slash_count = df['url'].apply(get_path_num_double_slash)
 csr_path_double_slash_count = csr_matrix(path_double_slash_count).T
 
-# 28) presence of %20
+# 31) presence of %20
 def has_percent20(url):
   return '%20' in url
 percent20_presence = df['url'].apply(has_percent20)
 csr_percent20_presence = csr_matrix(percent20_presence).T
 
-# 29) presence of upercase directories
+# 32) presence of upercase directories
 def uppercase_dirs_count(url):
   path = urlparse(url).path
   return sum(1 for dir_name in path.split('/') if any(c.isupper() for c in dir_name))
 uppercase_dirs = df['url'].apply(uppercase_dirs_count)
 csr_uppercase_dirs = csr_matrix(uppercase_dirs).T
 
-# 30) presence of single character directories
+# 33) presence of single character directories
 def single_char_dirs_count(url):
   path = urlparse(url).path
   return sum(1 for dir_name in path.split('/') if len(dir_name) == 1)
 single_char_dirs = df['url'].apply(single_char_dirs_count)
 csr_single_char_dirs = csr_matrix(single_char_dirs).T
 
-# 31) presence of special characters in path
+# 34) presence of special characters in path
 def special_chars_count(url):
   path = urlparse(url).path
   return sum(1 for c in path if not c.isalnum() and c != '/')
 path_count_special_chars = df['url'].apply(special_chars_count)
 csr_path_count_special_chars = csr_matrix(path_count_special_chars).T
 
-# 32) presence of zeroes in path
+# 35) presence of zeroes in path
 def zeroes_count(url):
   path = urlparse(url).path
   return path.count('0')
 path_zeroes_count = df['url'].apply(zeroes_count)
 csr_path_zeroes_count = csr_matrix(path_zeroes_count).T
 
-# 33) presence of uppercase to lowercase ratio in path
+# 36) presence of uppercase to lowercase ratio in path
 def uppercase_to_lowercase_ratio(url):
   # Extract the path from the URL
   path = urlparse(url).path
@@ -381,14 +381,14 @@ def uppercase_to_lowercase_ratio(url):
 path_uppercase_to_lowercase_ratio = df['url'].apply(uppercase_to_lowercase_ratio)
 csr_path_uppercase_to_lowercase_ratio = csr_matrix(path_uppercase_to_lowercase_ratio).T
 
-# 34) get length of params
+# 37) get length of params
 def params_get_length(url):
   query = urlparse(url).query
   return len(query)
 params_length = df['url'].apply(params_get_length)
 csr_params_length = csr_matrix(params_length).T
 
-# 35) get number of queries
+# 38) get number of queries
 def queries_get_count(url):
   query = urlparse(url).query
   return len(parse_qs(query))
