@@ -20,8 +20,8 @@ import sys
 
 import tldextract
 
+# df = pd.read_csv("datasets/malicious_phish.csv")
 df = pd.read_csv("datasets/benign_urls.csv")
-
 
 def load_top_1m_set(csv_file):
     """
@@ -107,18 +107,6 @@ www_counts = df['url'].apply(get_www).values
 csr_www = csr_matrix(www_counts).T
 #count_analysis(www_counts, y, "www")
 
-# 4) Non-ASCII counter NOT USEFUL
-# def get_num_non_ascii(url):
-#     count = 0
-#     for ch in url:
-#         if ord(ch) > 127:
-#             count += 1
-#     return count
-
-# non_ascii_counts = df['url'].apply(get_num_non_ascii).values
-# csr_non_ascii = csr_matrix(non_ascii_counts).T
-# count_analysis(non_ascii_counts, y, "non_ascii")
-
 # 5) URL length
 def get_url_length(url):
     return len(url)
@@ -135,46 +123,6 @@ csr_url_len = csr_matrix(url_length_count).T
 # ip_addr_presence = df['url'].apply(has_ip_address).values
 # csr_has_ip = csr_matrix(ip_addr_presence).T
 # count_analysis(ip_addr_presence, y, "ip address")
-
-# 7) Google search ranking
-# def get_google_search_rank(url):
-#     num_results = 5
-#     searches = search(url, num_results=num_results)
-#     time.sleep(1) # rate limiting to mitigate HTTP 429 Too many requests
-#     for i, res in enumerate(searches):
-#         if tldextract.extract(res) == tldextract.extract(url):
-#             return i
-
-#     return num_results
-
-# csr_gsearch_rank = csr_matrix(df['url'].apply(get_google_search_rank).values).T
-
-# 8) Domain age
-# def get_domain_age(url):
-    # data = whois.whois('google.com') # might have rate limiting
-
-# csr_domain_age = df['url'].apply(get_domain_age) # not completed
-
-# 9) Get minimum Levenshtein distance from top 1 million websites?
-
-# 10) Domain and subdomain and suffix encoding: KEEPS GOING OUT OF MEMORY
-#def domain_subdomain_suffix_encoding(df):
-    #extract_res = df.apply(lambda url: tldextract.extract(url))
-
-    #domain = extract_res.map(lambda obj: obj.domain)
-    #subdomain = extract_res.map(lambda obj: obj.subdomain)
-    #suffix = extract_res.map(lambda obj: obj.suffix)
-
-    # print(domain.nunique(), subdomain.nunique(), suffix.nunique())
-
-    #domain_vec, subdomain_vec, suffix_vec = CountVectorizer(binary=True), \
-        #CountVectorizer(binary=True), CountVectorizer(binary=True)
-
-    #domain = domain_vec.fit_transform(domain)
-    #subdomain = subdomain_vec.fit_transform(subdomain)
-    #suffix = suffix_vec.fit_transform(suffix)
-
-    #return domain#, subdomain, suffix
 
 # 11) Number of digits
 def get_num_digits(url):
@@ -250,7 +198,7 @@ csr_domain_extension = csr_matrix(domain_extension).T
 # keep track of domain to index mapping
 domain_index_df = pd.DataFrame({'Domain': df['url'].apply(get_domain_extension), 'Index': domain_extension})
 # save domain index mapping to csv
-domain_index_df.to_csv('datasets\domain_index_mapping.csv', index=False)
+domain_index_df.to_csv('datasets/domain_index_mapping.csv', index=False)
 
 # 20) Number of semicolons
 def get_num_semicolon(url):
@@ -276,7 +224,13 @@ def get_num_equals(url):
 equals_count = df['url'].apply(get_num_equals)
 csr_equals_count = csr_matrix(equals_count).T
 
-# 24) Digit to letter ratio
+# 24) Number of ampersands
+def get_num_ampersands(url):
+  return len(re.findall(r'\&', url))
+ampersands_count = df['url'].apply(get_num_ampersands)
+csr_ampersands_count = csr_matrix(ampersands_count).T
+
+# 25) Digit to letter ratio
 def get_digit_letter_ratio(url):
   num_digits = len(re.findall(r'\d', url))
   num_letters = len(re.findall(r'[a-zA-Z]', url))
@@ -288,7 +242,7 @@ csr_digit_letter_ratio = csr_matrix(digit_letter_ratio).T
 
 # ===== Primary Domain Features ===== #
 
-# 25) Primary Domain: Number of non-alphanumeric characters
+# 26) Primary Domain: Number of non-alphanumeric characters
 def pd_get_num_count(url):
   extracted = tldextract.extract(url)
   primary_domain = extracted.domain + '.' + extracted.suffix
@@ -296,7 +250,7 @@ def pd_get_num_count(url):
 pd_num_count = df['url'].apply(pd_get_num_count)
 csr_pd_num_count = csr_matrix(pd_num_count).T
 
-# 26) Primary Domain: Number of non-alphanumeric characters
+# 27) Primary Domain: Number of non-alphanumeric characters
 def pd_get_num_non_alphanumeric(url):
   extracted = tldextract.extract(url)
   primary_domain = extracted.domain + '.' + extracted.suffix
@@ -304,7 +258,7 @@ def pd_get_num_non_alphanumeric(url):
 pd_non_alphanumeric_count = df['url'].apply(pd_get_num_non_alphanumeric)
 csr_pd_non_alphanumeric_count = csr_matrix(pd_non_alphanumeric_count).T
 
-# 27) Primary Domain: Number of @
+# 28) Primary Domain: Number of @
 def pd_get_num_at(url):
   extracted = tldextract.extract(url)
   primary_domain = extracted.domain + '.' + extracted.suffix
@@ -312,7 +266,7 @@ def pd_get_num_at(url):
 pd_at_count = df['url'].apply(pd_get_num_at)
 csr_pd_at_count = csr_matrix(pd_at_count).T
 
-# 28) Primary Domain: Number of hyphens
+# 29) Primary Domain: Number of hyphens
 def pd_get_hyphen_count(url):
   extracted = tldextract.extract(url)
   primary_domain = extracted.domain + '.' + extracted.suffix
@@ -320,7 +274,7 @@ def pd_get_hyphen_count(url):
 pd_hyphen_count = df['url'].apply(pd_get_hyphen_count)
 csr_pd_hyphen_count = csr_matrix(pd_hyphen_count).T
 
-# 29) Primary Domain: In top alexa 1m
+# 30) Primary Domain: In top alexa 1m
 def pd_get_in_alexa_top_1m(url):
   extracted = tldextract.extract(url)
   primary_domain = extracted.domain + '.' + extracted.suffix
@@ -329,48 +283,48 @@ pd_in_alex_top_1m = df['url'].apply(pd_get_in_alexa_top_1m)
 csr_pd_in_alex_top_1m = csr_matrix(pd_in_alex_top_1m).T
 
 # ===== Path Features ===== #
-# 30) Number of //
+# 31) Number of //
 def get_path_num_double_slash(url):
   path = urlparse(url).path
   return len(re.findall(r'//', path))
 path_double_slash_count = df['url'].apply(get_path_num_double_slash)
 csr_path_double_slash_count = csr_matrix(path_double_slash_count).T
 
-# 31) presence of %20
+# 32) presence of %20
 def has_percent20(url):
   return '%20' in url
 percent20_presence = df['url'].apply(has_percent20)
 csr_percent20_presence = csr_matrix(percent20_presence).T
 
-# 32) presence of upercase directories
+# 33) presence of uppercase directories
 def uppercase_dirs_count(url):
   path = urlparse(url).path
   return sum(1 for dir_name in path.split('/') if any(c.isupper() for c in dir_name))
 uppercase_dirs = df['url'].apply(uppercase_dirs_count)
 csr_uppercase_dirs = csr_matrix(uppercase_dirs).T
 
-# 33) presence of single character directories
+# 34) presence of single character directories
 def single_char_dirs_count(url):
   path = urlparse(url).path
   return sum(1 for dir_name in path.split('/') if len(dir_name) == 1)
 single_char_dirs = df['url'].apply(single_char_dirs_count)
 csr_single_char_dirs = csr_matrix(single_char_dirs).T
 
-# 34) presence of special characters in path
+# 35) presence of special characters in path
 def special_chars_count(url):
   path = urlparse(url).path
   return sum(1 for c in path if not c.isalnum() and c != '/')
 path_count_special_chars = df['url'].apply(special_chars_count)
 csr_path_count_special_chars = csr_matrix(path_count_special_chars).T
 
-# 35) presence of zeroes in path
+# 36) count of zeroes in path
 def zeroes_count(url):
   path = urlparse(url).path
   return path.count('0')
 path_zeroes_count = df['url'].apply(zeroes_count)
 csr_path_zeroes_count = csr_matrix(path_zeroes_count).T
 
-# 36) presence of uppercase to lowercase ratio in path
+# 37) presence of uppercase to lowercase ratio in path
 def uppercase_to_lowercase_ratio(url):
   # Extract the path from the URL
   path = urlparse(url).path
@@ -381,50 +335,86 @@ def uppercase_to_lowercase_ratio(url):
 path_uppercase_to_lowercase_ratio = df['url'].apply(uppercase_to_lowercase_ratio)
 csr_path_uppercase_to_lowercase_ratio = csr_matrix(path_uppercase_to_lowercase_ratio).T
 
-# 37) get length of params
+# 38) get length of params
 def params_get_length(url):
   query = urlparse(url).query
   return len(query)
 params_length = df['url'].apply(params_get_length)
 csr_params_length = csr_matrix(params_length).T
 
-# 38) get number of queries
+# 39) get number of queries
 def queries_get_count(url):
   query = urlparse(url).query
   return len(parse_qs(query))
 queries_count = df['url'].apply(queries_get_count)
 csr_queries_count = csr_matrix(queries_count).T
 
+## All features: feature_updated_dataset_X
+# X = hstack([csr_www, csr_url_len, csr_digit_count, 
+#       csr_percentage_count, csr_dot_count, csr_bs_count, csr_dash_count, 
+#       csr_url_entropy, csr_url_num_params, csr_url_num_subdomains, csr_domain_extension,
+#       csr_semicolon_count, csr_underscores_count, csr_questionmarks_count,
+#       csr_equals_count, csr_ampersands_count, csr_digit_letter_ratio, 
+      
+#       csr_pd_num_count, csr_pd_non_alphanumeric_count, csr_pd_at_count, csr_pd_hyphen_count, csr_pd_in_alex_top_1m,
+      
+#       csr_path_double_slash_count, csr_percent20_presence,
+#       csr_uppercase_dirs, csr_single_char_dirs, csr_path_count_special_chars,
+#       csr_path_zeroes_count, csr_path_uppercase_to_lowercase_ratio, csr_params_length,
+#       csr_queries_count])
 
+# column_names = ['www', 'url_length', 'digit_count', 'percentage_count', 'dot_count'
+#                 'bs_count', 'dash_count', 'url_entropy', 'params_count', 'subdomain_count'
+#                 'domain_extension', 'semicolon_count', 'underscores_count', 'questionmarks_count', 'equals_count', 'ampersands_count', 'digit_letter_ratio', 
+                
+#                 'pd_num_count', 'pd_non_alphanumeric_count', 'pd_at_count', 'pd_hyphen_count', 'pd_in_alex_top_1m',
+                
+#                 'path_double_slash_count', 'percent20_presence', 'uppercase_dirs', 'single_char_dirs', 'path_count_special_chars',
+#                 'path_zeroes_count', 'path_uppercase_to_lowercase_ratio', 'params_length', 'queries_count']
+
+# Reduced: feature_updated_dataset_X_reduced
+# X = hstack([csr_www, csr_url_len, csr_digit_count, 
+#       csr_percentage_count, csr_bs_count, csr_dash_count, 
+#       csr_url_entropy, csr_url_num_params, csr_domain_extension,
+#       csr_underscores_count,
+#       csr_equals_count, csr_ampersands_count, csr_digit_letter_ratio, 
+      
+#       csr_pd_num_count, csr_pd_at_count, csr_pd_hyphen_count, csr_pd_in_alex_top_1m,
+#       ])
+
+
+# # Adding headers so it's easier to read when doing feature analysis 
+# column_names = ['www', 'url_length', 'digit_count', 'percentage_count', 
+#                 'bs_count', 'dash_count', 'url_entropy', 'params_count', 
+#                 'domain_extension', 'underscores_count', 'equals_count', 'ampersands_count', 'digit_letter_ratio', 
+                
+#                 'pd_num_count', 'pd_at_count', 'pd_hyphen_count', 'pd_in_alex_top_1m']
+
+
+
+# Reduced further: feature_updated_dataset_X_reduced_further
 X = hstack([csr_www, csr_url_len, csr_digit_count, 
-      csr_percentage_count, csr_dot_count, csr_bs_count, csr_dash_count, 
-      csr_url_entropy, csr_url_num_params, csr_url_num_subdomains, csr_domain_extension,
-      csr_semicolon_count, csr_underscores_count, csr_questionmarks_count,
+      csr_percentage_count, csr_bs_count, 
       csr_equals_count, csr_digit_letter_ratio, 
       
-      csr_pd_num_count, csr_pd_non_alphanumeric_count, csr_pd_at_count, csr_pd_hyphen_count, csr_pd_in_alex_top_1m,
-      
-      csr_path_double_slash_count, csr_percent20_presence,
-      csr_uppercase_dirs, csr_single_char_dirs, csr_path_count_special_chars,
-      csr_path_zeroes_count, csr_path_uppercase_to_lowercase_ratio, csr_params_length,
-      csr_queries_count])
+      csr_pd_at_count, csr_pd_hyphen_count, csr_pd_in_alex_top_1m,
+      ])
 
 
 # Adding headers so it's easier to read when doing feature analysis 
-column_names = ['www', 'url_length', 'digit_count', 'percentage_count', 'dot_count', 
-                'bs_count', 'dash_count', 'url_entropy', 'params_count', 'subdomains_count', 
-                'domain_extension', 'semicolon_count', 'underscores_count', 'questionmarks_count', 'equals_count', 'digit_letter_ratio', 
+column_names = ['www', 'url_length', 'digit_count', 'percentage_count', 
+                'bs_count', 'equals_count', 'digit_letter_ratio', 
                 
-                'pd_num_count', 'pd_non_alphanumeric_count', 'pd_at_count', 'pd_hyphen_count', 'pd_in_alex_top_1m',
-                
-                'path_double_slash_count', 'percent20_presence', 'uppercase_dirs', 'single_char_dirs',
-                'path_count_special_chars', 'path_zeroes_count', 'path_uppercase_to_lowercase_ratio',
-                'params_length', 'queries_count']
+                'pd_at_count', 'pd_hyphen_count', 'pd_in_alex_top_1m']
+
 dfX = pd.DataFrame(X.toarray(), columns=column_names)
 #dfy = pd.DataFrame({'type_val': y})
 
 
 # Maybe do evaluation on features? Eg chi2 test, select k best, PCA 
 # Store dataframe into CSV file for modelling
-dfX.to_csv("datasets/benign_dataset_X2.csv", index=False)
-#dfy.to_csv("datasets/feature_updated_dataset_y.csv", index=False)
+# dfX.to_csv("datasets/feature_updated_dataset_X_reduced.csv", index=False)
+# dfX.to_csv("datasets/feature_updated_dataset_X_reduced_further.csv", index=False)
+# dfX.to_csv("datasets/benign_dataset_X_reduced.csv", index=False)
+dfX.to_csv("datasets/benign_dataset_X_reduced_further.csv", index=False)
+# dfy.to_csv("datasets/feature_updated_dataset_y.csv", index=False) # independent of feature selection
