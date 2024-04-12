@@ -7,7 +7,7 @@ import tldextract
 tokenizer = AutoTokenizer.from_pretrained('distilbert-base-uncased')
 
 # Load model
-model_path = 'bert_model_url_classification\distilBERT Model 3 Epochs RandomUnderSampled & Additional Features'
+model_path = 'bert_model_url_classification\distilBERT Model no pre-train'
 model = AutoModelForSequenceClassification.from_pretrained(model_path)
 
 model.eval()
