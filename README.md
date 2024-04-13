@@ -10,27 +10,13 @@ Only trusted sources such as DNS Authoritative, TLD, root servers are considered
 1) Project ran on Python 3.12.2 environment
 2) Run `./setup.sh`
 
-### To run features and model
-1) Run `./run.sh`
-
-### Feature Engineering
-
-1) HTTP counter -> might be a redirection
-2) HTTPS counter -> might be a redirection
-3) www counter -> might be a redirection
-4) Non-ascii counter -> Following RFC 3986 standard of URI, but do not want to discount uncommon symbols (eg %)
-5) Length of URL -> longer URL = more likely to be malware
-6) Has IP address in URL -> Bypassing DNS address checks, common in malware
-7) Domain age -> Registered later, likely to be malware (older domains likely have been caught?), use WHOIS database maintained by ICANN
-8) Typosquatting detection via Levenshtein distance on common words from the internet (common authoritative domains from Alexa top 1 million domains)
-- Check for some library for this
-9) Check google search rank when url is searched
-
 ### Model training
 
-1) Logistic Regression
-2) SVM classifier
-3) Random Forest classifier
+1) Random Forest classifier for benign
+2) Random Forest classifier for general class classification
+3) Random Forest classifier for lexical features
+4) Random Forest classifier for lexical and trigrams
+5) DistilBERT uncased
 
 ### BERT Model 
 Download Link: https://drive.google.com/file/d/1yxJGLWCx5lPktDJE9q2VYYwHJW-s6eHH/view?usp=drive_link
