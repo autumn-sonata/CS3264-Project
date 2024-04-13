@@ -22,6 +22,7 @@ import tldextract
 
 df = pd.read_csv("datasets/malicious_phish.csv")
 # df = pd.read_csv("datasets/benign_urls.csv")
+# df = pd.read_csv("datasets/phishtank_phish_urls.csv")
 
 def load_top_1m_set(csv_file):
     """
@@ -350,45 +351,51 @@ queries_count = df['url'].apply(queries_get_count)
 csr_queries_count = csr_matrix(queries_count).T
 
 ## All features: feature_updated_dataset_X
-X = hstack([csr_www, csr_url_len, csr_digit_count, 
-      csr_percentage_count, csr_dot_count, csr_bs_count, csr_dash_count, 
-      csr_url_entropy, csr_url_num_params, csr_url_num_subdomains, csr_domain_extension,
-      csr_semicolon_count, csr_underscores_count, csr_questionmarks_count,
-      csr_equals_count, csr_ampersands_count, csr_digit_letter_ratio, 
-      
-      csr_pd_num_count, csr_pd_non_alphanumeric_count, csr_pd_at_count, csr_pd_hyphen_count, csr_pd_in_alex_top_1m,
-      
-      csr_path_double_slash_count, csr_percent20_presence,
-      csr_uppercase_dirs, csr_single_char_dirs, csr_path_count_special_chars,
-      csr_path_zeroes_count, csr_path_uppercase_to_lowercase_ratio, csr_params_length,
-      csr_queries_count])
-
-column_names = ['www', 'url_length', 'digit_count', 'percentage_count', 'dot_count',
-                'bs_count', 'dash_count', 'url_entropy', 'params_count', 'subdomain_count',
-                'domain_extension', 'semicolon_count', 'underscores_count', 'questionmarks_count', 'equals_count', 'ampersands_count', 'digit_letter_ratio', 
-                
-                'pd_num_count', 'pd_non_alphanumeric_count', 'pd_at_count', 'pd_hyphen_count', 'pd_in_alex_top_1m',
-                
-                'path_double_slash_count', 'percent20_presence', 'uppercase_dirs', 'single_char_dirs', 'path_count_special_chars',
-                'path_zeroes_count', 'path_uppercase_to_lowercase_ratio', 'params_length', 'queries_count']
-
-# Reduced: feature_updated_dataset_X_reduced
 # X = hstack([csr_www, csr_url_len, csr_digit_count, 
-#       csr_percentage_count, csr_bs_count, csr_dash_count, 
-#       csr_url_entropy, csr_url_num_params, csr_domain_extension,
-#       csr_underscores_count,
+#       csr_percentage_count, csr_dot_count, csr_bs_count, csr_dash_count, 
+#       csr_url_entropy, csr_url_num_params, csr_url_num_subdomains, csr_domain_extension,
+#       csr_semicolon_count, csr_underscores_count, csr_questionmarks_count,
 #       csr_equals_count, csr_ampersands_count, csr_digit_letter_ratio, 
       
-#       csr_pd_num_count, csr_pd_at_count, csr_pd_hyphen_count, csr_pd_in_alex_top_1m,
-#       ])
+#       csr_pd_num_count, csr_pd_non_alphanumeric_count, csr_pd_at_count, csr_pd_hyphen_count, csr_pd_in_alex_top_1m,
+      
+#       csr_path_double_slash_count, csr_percent20_presence,
+#       csr_uppercase_dirs, csr_single_char_dirs, csr_path_count_special_chars,
+#       csr_path_zeroes_count, csr_path_uppercase_to_lowercase_ratio, csr_params_length,
+#       csr_queries_count])
 
-
-# # Adding headers so it's easier to read when doing feature analysis 
-# column_names = ['www', 'url_length', 'digit_count', 'percentage_count', 
-#                 'bs_count', 'dash_count', 'url_entropy', 'params_count', 
-#                 'domain_extension', 'underscores_count', 'equals_count', 'ampersands_count', 'digit_letter_ratio', 
+# column_names = ['www', 'url_length', 'digit_count', 'percentage_count', 'dot_count',
+#                 'bs_count', 'dash_count', 'url_entropy', 'params_count', 'subdomain_count',
+#                 'domain_extension', 'semicolon_count', 'underscores_count', 'questionmarks_count', 'equals_count', 'ampersands_count', 'digit_letter_ratio', 
                 
-#                 'pd_num_count', 'pd_at_count', 'pd_hyphen_count', 'pd_in_alex_top_1m']
+#                 'pd_num_count', 'pd_non_alphanumeric_count', 'pd_at_count', 'pd_hyphen_count', 'pd_in_alex_top_1m',
+                
+#                 'path_double_slash_count', 'percent20_presence', 'uppercase_dirs', 'single_char_dirs', 'path_count_special_chars',
+#                 'path_zeroes_count', 'path_uppercase_to_lowercase_ratio', 'params_length', 'queries_count']
+
+# Reduced: feature_updated_dataset_X_reduced
+X = hstack([csr_www, csr_url_len, csr_digit_count, 
+      csr_dot_count, csr_bs_count, csr_dash_count, 
+      csr_url_entropy, csr_url_num_params, csr_url_num_subdomains, csr_domain_extension,
+      csr_underscores_count, csr_questionmarks_count,
+      csr_equals_count, csr_ampersands_count, csr_digit_letter_ratio, 
+      
+      csr_pd_num_count, csr_pd_non_alphanumeric_count,
+      
+      csr_uppercase_dirs, csr_path_count_special_chars,
+      csr_path_uppercase_to_lowercase_ratio, csr_params_length,
+      csr_queries_count])
+
+
+# Adding headers so it's easier to read when doing feature analysis 
+column_names = ['www', 'url_length', 'digit_count', 'dot_count',
+                'bs_count', 'dash_count', 'url_entropy', 'params_count', 'subdomain_count',
+                'domain_extension', 'underscores_count', 'questionmarks_count', 'equals_count', 'ampersands_count', 'digit_letter_ratio', 
+                
+                'pd_num_count', 'pd_non_alphanumeric_count', 
+                
+                'uppercase_dirs', 'path_count_special_chars',
+                'path_uppercase_to_lowercase_ratio', 'params_length', 'queries_count']
 
 
 
@@ -416,17 +423,8 @@ column_names = ['www', 'url_length', 'digit_count', 'percentage_count', 'dot_cou
 # column_names = ['www']
 
 dfX = pd.DataFrame(X.toarray(), columns=column_names)
-#dfy = pd.DataFrame({'type_val': y})
 
-
-# Maybe do evaluation on features? Eg chi2 test, select k best, PCA 
 # Store dataframe into CSV file for modelling
-dfX.to_csv("datasets/feature_updated_dataset_X_all.csv", index=False)
-# dfX.to_csv("datasets/feature_updated_dataset_X_reduced.csv", index=False)
-# dfX.to_csv("datasets/feature_updated_dataset_X_reduced_further.csv", index=False)
-# dfX.to_csv("datasets/feature_updated_dataset_X_1.csv", index=False)
-# dfX.to_csv("datasets/benign_dataset_X_all.csv", index=False)
-# dfX.to_csv("datasets/benign_dataset_X_reduced.csv", index=False)
-# dfX.to_csv("datasets/benign_dataset_X_reduced_further.csv", index=False)
-# dfX.to_csv("datasets/benign_dataset_X_1.csv", index=False)
-# dfy.to_csv("datasets/feature_updated_dataset_y.csv", index=False) # independent of feature selection
+dfX.to_csv("rf-general/feature_updated_dataset_X.csv", index=False)
+# dfX.to_csv("rf-general/benign_dataset_X.csv", index=False)
+# dfX.to_csv("rf-general/phishing_dataset_X.csv", index=False)
