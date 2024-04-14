@@ -56,8 +56,6 @@ def classification_type(type):
     else:
         print(f"Unable to find proper type: {type}")
 
-#y = df['type'].apply(classification_type)
-
 ## Analysis of counts
 def count_analysis(X, y, feature_name):
     unique_y = np.unique(y)
@@ -426,5 +424,10 @@ dfX = pd.DataFrame(X.toarray(), columns=column_names)
 
 # Store dataframe into CSV file for modelling
 dfX.to_csv("rf-general/feature_updated_dataset_X.csv", index=False)
+dfX.to_csv("ensemble/rf-general-features.csv", index=False)
 # dfX.to_csv("rf-general/benign_dataset_X.csv", index=False)
 # dfX.to_csv("rf-general/phishing_dataset_X.csv", index=False)
+
+# Uncomment if labels are needed
+# y = df['type'].apply(classification_type)
+# y.to_csv("datasets/feature_updated_dataset_y.csv", index=False)

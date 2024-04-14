@@ -361,5 +361,6 @@ dfX = pd.DataFrame(X.toarray(), columns=column_names)
 
 # Store dataframe into CSV file for modelling
 dfX.to_csv("rf-benign-specialize/feature_updated_dataset_X_3.csv", index=False)
+dfX.to_csv("ensemble/rf-benign-specialize-features.csv", index=False)
 # dfX.to_csv("rf-benign-specialize/benign_dataset_X_3.csv", index=False)
 # dfX.to_csv("rf-benign-specialize/phishing_dataset_X_3.csv", index=False)
