@@ -425,8 +425,12 @@ dfX = pd.DataFrame(X.toarray(), columns=column_names)
 # Store dataframe into CSV file for modelling
 dfX.to_csv("rf-general/feature_updated_dataset_X.csv", index=False)
 dfX.to_csv("ensemble/rf-general-features.csv", index=False)
+
 # dfX.to_csv("rf-general/benign_dataset_X.csv", index=False)
+# dfX.to_csv("ensemble/rf-general-test-benign.csv", index=False)
+
 # dfX.to_csv("rf-general/phishing_dataset_X.csv", index=False)
+# dfX.to_csv("ensemble/rf-general-test-phishing.csv", index=False)
 
 # Uncomment if labels are needed
 # y = df['type'].apply(classification_type)
