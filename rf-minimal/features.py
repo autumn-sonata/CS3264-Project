@@ -360,11 +360,11 @@ column_names = ['url_entropy', 'domain_extension', 'bs_count']
 dfX = pd.DataFrame(X.toarray(), columns=column_names)
 
 # Store dataframe into CSV file for modelling
-dfX.to_csv("rf-benign-specialize/feature_updated_dataset_X_3.csv", index=False)
-dfX.to_csv("ensemble/rf-benign-specialize-features.csv", index=False)
+dfX.to_csv("rf-minimal/feature_updated_dataset_X_3.csv", index=False)
+dfX.to_csv("ensemble/rf-minimal-features.csv", index=False)
 
-# dfX.to_csv("rf-benign-specialize/benign_dataset_X_3.csv", index=False)
-# dfX.to_csv("ensemble/rf-benign-specialize-test-benign.csv", index=False)
+# dfX.to_csv("rf-minimal/benign_dataset_X_3.csv", index=False)
+# dfX.to_csv("ensemble/rf-minimal-test-benign.csv", index=False)
 
-# dfX.to_csv("rf-benign-specialize/phishing_dataset_X_3.csv", index=False)
-# dfX.to_csv("ensemble/rf-benign-specialize-test-phishing.csv", index=False)
+# dfX.to_csv("rf-minimal/phishing_dataset_X_3.csv", index=False)
+# dfX.to_csv("ensemble/rf-minimal-test-phishing.csv", index=False)
