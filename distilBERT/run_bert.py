@@ -4,7 +4,7 @@ import torch.nn.functional as F
 import tldextract
 
 # Load tokenizer
-tokenizer = AutoTokenizer.from_pretrained('distilbert-base-uncased')
+tokenizer = AutoTokenizer.from_pretrained('distilbert-base-cased')
 
 # Load model
 model_path = 'bert_model_url_classification\distilBERT Model no pre-train'
