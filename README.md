@@ -1,6 +1,6 @@
 # CS3264-Project
 
-### information
+### Package Installation
 - `pip freeze -l > requirements.txt` to update requirements.txt
 
 ### Setup
