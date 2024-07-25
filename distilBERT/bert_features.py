@@ -2,6 +2,7 @@ import tldextract
 import numpy as np
 import pandas as pd
 
+# Exploration into distilbbert features engineering splitting url, domain, subdomain, and suffix
 df = pd.read_csv("datasets/malicious_phish.csv")
 
 def preprocess_url(df):

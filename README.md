@@ -1,9 +1,6 @@
 # CS3264-Project
 
-Justification for not querying: The user probably does not want to query anything malicious from a website.
-Only trusted sources such as DNS Authoritative, TLD, root servers are considered. 
-
-### Additional information
+### Package Installation
 - `pip freeze -l > requirements.txt` to update requirements.txt
 
 ### Setup
@@ -12,19 +9,21 @@ Only trusted sources such as DNS Authoritative, TLD, root servers are considered
 
 ### Model training
 
-1) Random Forest classifier for benign
+1) Random Forest classifier for benign (`rf-minimal`)
 2) Random Forest classifier for general class classification
 3) Random Forest classifier for lexical features
 4) Random Forest classifier for lexical and trigrams
-5) DistilBERT uncased
+5) DistilBERT Cased
 
-### BERT Model 
-Download Link: https://drive.google.com/file/d/1yxJGLWCx5lPktDJE9q2VYYwHJW-s6eHH/view?usp=drive_link
-Trained using: dataset/Sampled_Data_BERT.csv
+### Models
+Models for `rf-general`, `rf-lexical`, `rf-minimal` and `distilBERT` cased can be found in:
+https://drive.google.com/drive/u/0/folders/1v5IFIY7J0EJPg6VVZXGeGp1DY9VGPuvp
 
 ### Additional Datasets
 #### Training and validation set
 https://www.kaggle.com/datasets/sid321axn/malicious-urls-dataset
 
 #### Test set
-- Phishing test: https://github.com/GregaVrbancic/Phishing-Dataset/blob/master/dataset_full.csv 
+- Phishing test: https://phishtank.org/developer_info.php
+- Benign test: https://www.kaggle.com/datasets/siddharthkumar25/malicious-and-benign-urls
+
